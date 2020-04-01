@@ -16,7 +16,7 @@ export interface LetterparserMail {
   text?: string;
 }
 
-export function extract(node: LetterparserNode) {
+export function extractMail(node: LetterparserNode) {
   const mail: LetterparserMail = {};
 
   if ('To' in node.headers) {
@@ -35,6 +35,10 @@ export function extract(node: LetterparserNode) {
     mail.from = node.headers['From'];
   }
 
+  if ('Subject' in node.headers) {
+    mail.subject = node.headers['Subject'];
+  }
+
   if (node.body instanceof Array) {
     for (let subnode of node.body) {
       if (subnode.contentType.type === 'text/html') {
@@ -48,4 +52,6 @@ export function extract(node: LetterparserNode) {
   } else if (node.contentType.type.startsWith('text/')) {
     mail.text = node.body as string;
   }
+
+  return mail;
 }

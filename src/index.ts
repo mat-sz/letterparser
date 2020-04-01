@@ -1,13 +1,13 @@
 import { parseBody, LetterparserNode } from './parser';
-import { LetterparserMail } from './extractor';
+import { extractMail, LetterparserMail } from './extractor';
 
 export { LetterparserNode };
 
 export function extract(message: string | LetterparserNode): LetterparserMail {
   if (typeof message === 'string') {
-    return extract(parse(message));
+    return extractMail(parse(message));
   } else {
-    return extract(message);
+    return extractMail(message);
   }
 }
 
