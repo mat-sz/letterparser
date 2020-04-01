@@ -24,7 +24,7 @@
   "scripts": {
     "prepare": "npm run build",
     "build": "tsc",
-    "dev": "ts-node-dev --respawn --transpileOnly src/index.ts"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
