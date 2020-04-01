@@ -9,6 +9,8 @@ export interface LetterparserNode {
   body: LetterparserNode | LetterparserNode[] | string;
 }
 
+const MAX_DEPTH = 99;
+
 function parseContentType(value: string): LetterparserContentType | undefined {
   if (value.includes(',')) {
     return undefined;
@@ -87,11 +89,16 @@ function parseHeaders(
 }
 
 function parseBody(
+  depth: number,
   lines: string[],
   lineStartIdx: number,
   lineEndIdx: number,
   lookaheadBoundaryLineIdx?: number
 ) {
+  if (depth > MAX_DEPTH) {
+    throw new Error('Maximum depth of ' + MAX_DEPTH + ' exceeded.');
+  }
+
   let contents: LetterparserNode | undefined;
 
   let [headers, lineIdx] = parseHeaders(lines, lineStartIdx, lineEndIdx);
@@ -145,6 +152,7 @@ function parseBody(
         }
 
         const [subcontents, newLineIdx] = parseBody(
+          depth + 1,
           lines,
           lineIdx + 1,
           lineEndIdx,
@@ -193,6 +201,6 @@ function parseBody(
 
 export function parse(message: string) {
   let lines = message.replace(/\r/g, '').split('\n');
-  const [contents] = parseBody(lines, 0, lines.length);
+  const [contents] = parseBody(1, lines, 0, lines.length);
   return contents;
 }
