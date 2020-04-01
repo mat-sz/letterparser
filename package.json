@@ -1,0 +1,56 @@
+{
+  "name": "letterparser",
+  "version": "0.0.1",
+  "description": "Raw e-mail parsing with MIME and plaintext support (isomorphic)",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "keywords": [
+    "email",
+    "e-mail",
+    "mail",
+    "mime",
+    "mailparser",
+    "emailparser",
+    "mail-parser",
+    "email-parser",
+    "e-mail-parser",
+    "mime-parser",
+    "mime-message",
+    "mime-message-parser",
+    "parser",
+    "typescript",
+    "isomorphic"
+  ],
+  "scripts": {
+    "prepare": "npm run build",
+    "build": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mat-sz/letterparser.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mat-sz/letterparser/issues"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "src/**/*.{js,jsx,ts,tsx,json,css,scss,md}": [
+      "prettier --write"
+    ]
+  },
+  "homepage": "https://github.com/mat-sz/letterparser",
+  "author": "Mat Sz <contact@matsz.dev>",
+  "license": "BSD-3-Clause-Clear",
+  "devDependencies": {
+    "@types/node": "^13.1.4",
+    "husky": "^4.2.3",
+    "lint-staged": "^10.0.9",
+    "prettier": "^2.0.2",
+    "ts-node-dev": "^1.0.0-pre.44",
+    "typescript": "^3.7.4"
+  }
+}
