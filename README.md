@@ -1,6 +1,8 @@
-# letterparser
+<h1 align="center">
+  <img src="https://raw.githubusercontent.com/mat-sz/letterparser/master/logo.png" alt="letterparser" width="700">
+</h1>
 
-letterparser is a parser library created for parsing e-mail messages. The library is written in TypeScript, fully supports both browser and server environments. The performance may not be the best at the current stage of development, parsing large messages is not recommended.
+**letterparser** is a parser library created for parsing e-mail messages. The library is written in TypeScript, fully supports both browser and server environments. The performance may not be the best at the current stage of development, parsing large messages is not recommended.
 
 This library was created as an isomorphic alternative for [mailparser](https://github.com/nodemailer/mailparser).
 
