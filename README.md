@@ -51,5 +51,4 @@ interface LetterparserNode {
 
 - [ ] Data extraction
 - [ ] Charset support
-- [ ] Parsing of message/\* types
 - [ ] Support for 7-bit and 8-bit MIME

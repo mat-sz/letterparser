@@ -99,7 +99,7 @@ function parseBody(
     throw new Error('Maximum depth of ' + MAX_DEPTH + ' exceeded.');
   }
 
-  let contents: LetterparserNode | undefined;
+  let contents: LetterparserNode;
 
   let [headers, lineIdx] = parseHeaders(lines, lineStartIdx, lineEndIdx);
   const parsedType = parseContentType(headers['Content-Type'] ?? 'text/plain');
@@ -115,10 +115,23 @@ function parseBody(
 
   const { type, parameters } = parsedType;
 
-  if (type === 'message/delivery-status') {
-    throw new Error('Message type is currently unsupported');
-  } else if (type?.startsWith('message')) {
-    throw new Error('Message type is currently unsupported');
+  if (type?.startsWith('message') && type !== 'message/delivery-status') {
+    const endIdx = lookaheadBoundaryLineIdx ?? lineEndIdx;
+
+    const [subcontents, newLineIdx] = parseBody(
+      depth + 1,
+      lines,
+      lineIdx,
+      endIdx
+    );
+
+    contents = {
+      contentType: parsedType,
+      headers,
+      body: subcontents,
+    };
+
+    lineIdx = newLineIdx;
   } else if (type?.startsWith('multipart')) {
     const boundary = parameters['boundary'];
     let contentsArray: LetterparserNode[] = [];

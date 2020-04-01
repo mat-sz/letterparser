@@ -60,6 +60,30 @@ describe('parse', () => {
     });
   });
 
+  it('parses message/*', () => {
+    const output = parse(
+      `To: a@example.com\nContent-Type: message/rfc822\n\nTo: b@example.com\nContent-Type: text/plain\n\nHello world!`
+    );
+
+    expect(output).toMatchObject({
+      contentType: {
+        type: 'message/rfc822',
+      },
+      headers: {
+        To: 'a@example.com',
+      },
+      body: {
+        contentType: {
+          type: 'text/plain',
+        },
+        headers: {
+          To: 'b@example.com',
+        },
+        body: 'Hello world!',
+      },
+    });
+  });
+
   it('throws when maximum depth is exceeded', () => {
     const input = `Content-Type: multipart/alternative; boundary="boundary"\n\n--boundary\n`.repeat(
       102
