@@ -1,3 +1,5 @@
+type Headers = { [k: string]: string | undefined };
+
 export interface LetterparserContentType {
   type: string;
   parameters: { [k: string]: string | undefined };
@@ -5,7 +7,7 @@ export interface LetterparserContentType {
 
 export interface LetterparserNode {
   contentType: LetterparserContentType;
-  headers: { [k: string]: string | undefined };
+  headers: { [k: string]: string | string[] | undefined };
   body: LetterparserNode | LetterparserNode[] | string;
 }
 
@@ -50,7 +52,7 @@ function parseHeaders(
   lineStartIdx: number,
   lineEndIdx: number
 ) {
-  let headers: any = {};
+  let headers: Headers = {};
   let headerName: string | undefined;
   let headerValue: string | undefined;
   let lineIdx = lineStartIdx;
@@ -67,8 +69,18 @@ function parseHeaders(
 
       headerValue += '\n' + line.trim();
     } else {
-      if (headerName) {
-        headers[headerName] = headerValue;
+      if (headerName && headerValue) {
+        if (headerName in headers) {
+          const value = headers[headerName];
+
+          if (typeof value === 'string') {
+            headers[headerName] = value + ', ' + headerValue;
+          } else {
+            headers[headerName] = headerValue;
+          }
+        } else {
+          headers[headerName] = headerValue;
+        }
       }
 
       if (line === '') {

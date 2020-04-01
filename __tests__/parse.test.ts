@@ -37,6 +37,16 @@ describe('parse', () => {
     });
   });
 
+  it('parses multiple headers with the same name', () => {
+    const output = parse(`X-Test-Header: test\nX-Test-Header: test 2\n`);
+
+    expect(output).toMatchObject({
+      headers: {
+        'X-Test-Header': 'test, test 2',
+      },
+    });
+  });
+
   it('parses multipart messages', () => {
     const output = parse(
       `Content-Type: multipart/alternative; boundary="boundary"\n\n--boundary\nContent-Type: text/plain\n\nHello world!\n\n--boundary\nContent-Type: text/plain\n\nHello, again!\n\n--boundary--`
