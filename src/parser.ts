@@ -1,16 +1,23 @@
-import { decodeMimeWords } from 'lettercoder';
+import { decodeMimeWords, decodeQuotedPrintable } from 'lettercoder';
+import { toByteArray } from 'base64-js';
+
+if (typeof TextDecoder === 'undefined') {
+  // @ts-ignore Isomorphism.
+  global['TextDecoder'] = require('util').TextDecoder;
+}
 
 type Headers = { [k: string]: string | undefined };
 
 export interface LetterparserContentType {
   type: string;
+  encoding?: string;
   parameters: Headers;
 }
 
 export interface LetterparserNode {
   contentType: LetterparserContentType;
   headers: Headers;
-  body: LetterparserNode | LetterparserNode[] | string;
+  body: LetterparserNode | LetterparserNode[] | string | Uint8Array;
 }
 
 const MAX_DEPTH = 99;
@@ -26,6 +33,8 @@ function parseContentType(value: string): LetterparserContentType | undefined {
     .map(s => s.trim());
 
   let parameters: any = {};
+  let encoding: string | undefined;
+
   if (split.length == 2) {
     for (let parameter of split.slice(1)) {
       const parameterSplit = parameter.split('=');
@@ -46,8 +55,15 @@ function parseContentType(value: string): LetterparserContentType | undefined {
     }
   }
 
+  if (typeof parameters['charset'] === 'string') {
+    encoding = parameters['charset'].split('*')[0];
+  } else if (split[0].startsWith('text/')) {
+    encoding = 'utf-8';
+  }
+
   return {
     type: split[0],
+    encoding,
     parameters,
   };
 }
@@ -217,11 +233,38 @@ export function parseBody(
     };
   } else {
     const endIdx = lookaheadBoundaryLineIdx ?? lineEndIdx;
+    let stringBody: string = lines.slice(lineIdx, endIdx).join('\n');
+    let body: string | Uint8Array = stringBody;
+
+    if (headers['Content-Transfer-Encoding']) {
+      if (parsedType.encoding) {
+        switch (headers['Content-Transfer-Encoding'].toLowerCase()) {
+          case 'base64':
+            const decoder = new TextDecoder(parsedType.encoding);
+            body = decoder.decode(toByteArray(stringBody));
+          case 'quoted-printable':
+            body = decodeQuotedPrintable(
+              stringBody,
+              parsedType.encoding
+            ) as string;
+        }
+      } else {
+        switch (headers['Content-Transfer-Encoding'].toLowerCase()) {
+          case 'base64':
+            body = toByteArray(stringBody);
+          case 'quoted-printable':
+            body = decodeQuotedPrintable(
+              stringBody,
+              parsedType.encoding
+            ) as Uint8Array;
+        }
+      }
+    }
 
     contents = {
       contentType: parsedType,
       headers,
-      body: lines.slice(lineIdx, endIdx).join('\n'),
+      body: body,
     };
 
     lineIdx = endIdx;

@@ -2,7 +2,7 @@ import { LetterparserNode, LetterparserContentType } from './parser';
 
 export interface LetterparserAttachment {
   contentType: LetterparserContentType;
-  body: string | ArrayBuffer;
+  body: string | Uint8Array;
 }
 
 export interface LetterparserMail {

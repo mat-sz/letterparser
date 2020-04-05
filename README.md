@@ -37,7 +37,7 @@ The function returns `LetterparserMail`:
 ```ts
 export interface LetterparserAttachment {
   contentType: LetterparserContentType;
-  body: string | ArrayBuffer;
+  body: string | Uint8Array;
 }
 
 export interface LetterparserMail {
@@ -73,19 +73,17 @@ The return value of that function is `LetterparserNode`, as defined below:
 ```ts
 interface LetterparserContentType {
   type: string;
-  parameters: { [k: string]: string | undefined };
+  encoding?: string;
+  parameters: Headers;
 }
 
 interface LetterparserNode {
   contentType: LetterparserContentType;
-  headers: { [k: string]: string | undefined };
-  body: LetterparserNode | LetterparserNode[] | string;
+  headers: Headers;
+  body: LetterparserNode | LetterparserNode[] | string | Uint8Array;
 }
 ```
 
 ## Missing functionality
 
 - [ ] Attachments
-- [ ] `=?UTF-8?`, Base64 and Quoted-Printable support (headers and Content-Transfer-Encoding).
-- [ ] Charset support
-- [ ] Support for 7-bit and 8-bit MIME
