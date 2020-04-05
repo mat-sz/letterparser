@@ -242,21 +242,25 @@ export function parseBody(
           case 'base64':
             const decoder = new TextDecoder(parsedType.encoding);
             body = decoder.decode(toByteArray(stringBody));
+            break;
           case 'quoted-printable':
             body = decodeQuotedPrintable(
               stringBody,
               parsedType.encoding
             ) as string;
+            break;
         }
       } else {
         switch (headers['Content-Transfer-Encoding'].toLowerCase()) {
           case 'base64':
             body = toByteArray(stringBody);
+            break;
           case 'quoted-printable':
             body = decodeQuotedPrintable(
               stringBody,
               parsedType.encoding
             ) as Uint8Array;
+            break;
         }
       }
     }

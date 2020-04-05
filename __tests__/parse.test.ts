@@ -27,6 +27,58 @@ describe('parse', () => {
     });
   });
 
+  it('parses body with Content-Transfer-Encoding: base64 (text)', () => {
+    const output = parse(
+      `Content-Type: text/plain\nContent-Transfer-Encoding: base64\n\nSGVsbG8gd29ybGQ=`
+    );
+
+    expect(output).toMatchObject({
+      contentType: {
+        type: 'text/plain',
+      },
+      body: 'Hello world',
+    });
+  });
+
+  it('parses body with Content-Transfer-Encoding: base64 (bytes)', () => {
+    const output = parse(
+      `Content-Type: application/octet-stream\nContent-Transfer-Encoding: base64\n\nQUE=`
+    );
+
+    expect(output).toMatchObject({
+      contentType: {
+        type: 'application/octet-stream',
+      },
+      body: new Uint8Array([0x41, 0x41]),
+    });
+  });
+
+  it('parses body with Content-Transfer-Encoding: quoted-printable (text)', () => {
+    const output = parse(
+      `Content-Type: text/plain\nContent-Transfer-Encoding: quoted-printable\n\nHello world`
+    );
+
+    expect(output).toMatchObject({
+      contentType: {
+        type: 'text/plain',
+      },
+      body: 'Hello world',
+    });
+  });
+
+  it('parses body with Content-Transfer-Encoding: quoted-printable (bytes)', () => {
+    const output = parse(
+      `Content-Type: application/octet-stream\nContent-Transfer-Encoding: quoted-printable\n\n=41=41`
+    );
+
+    expect(output).toMatchObject({
+      contentType: {
+        type: 'application/octet-stream',
+      },
+      body: new Uint8Array([0x41, 0x41]),
+    });
+  });
+
   it('parses multiline headers', () => {
     const output = parse(`X-Test-Header: test\n test\n`);
 
