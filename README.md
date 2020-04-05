@@ -83,7 +83,3 @@ interface LetterparserNode {
   body: LetterparserNode | LetterparserNode[] | string | Uint8Array;
 }
 ```
-
-## Missing functionality
-
-- [ ] Attachments

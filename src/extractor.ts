@@ -17,6 +17,41 @@ export interface LetterparserMail {
   text?: string;
 }
 
+function extractBody(node: LetterparserNode) {
+  let attachments: LetterparserAttachment[] = [];
+  let html = '';
+  let text = '';
+
+  if (node.body instanceof Uint8Array) {
+    attachments.push({
+      contentType: node.contentType,
+      body: node.body,
+    });
+  } else if (node.body instanceof Array) {
+    for (let subnode of node.body) {
+      const [_text, _html, _attachments] = extractBody(subnode);
+      text += _text + '\n';
+      html += _html + '\n';
+      if (_attachments.length > 0) {
+        attachments.push(..._attachments);
+      }
+    }
+  } else if (typeof node.body === 'object') {
+    const [_text, _html, _attachments] = extractBody(node.body);
+    text += _text + '\n';
+    html += _html + '\n';
+    if (_attachments.length > 0) {
+      attachments.push(..._attachments);
+    }
+  } else if (node.contentType.type === 'text/html') {
+    html = node.body as string;
+  } else if (node.contentType.type.startsWith('text/')) {
+    text = node.body as string;
+  }
+
+  return [text, html, attachments] as const;
+}
+
 export function extractMail(node: LetterparserNode) {
   const mail: LetterparserMail = {};
 
@@ -44,19 +79,11 @@ export function extractMail(node: LetterparserNode) {
     mail.date = new Date(node.headers['Date']);
   }
 
-  if (node.body instanceof Array) {
-    for (let subnode of node.body) {
-      if (subnode.contentType.type === 'text/html') {
-        mail.html = subnode.body as string;
-      } else if (subnode.contentType.type.startsWith('text/')) {
-        mail.text = subnode.body as string;
-      }
-    }
-  } else if (node.contentType.type === 'text/html') {
-    mail.html = node.body as string;
-  } else if (node.contentType.type.startsWith('text/')) {
-    mail.text = node.body as string;
-  }
+  const [text, html, attachments] = extractBody(node);
+
+  mail.text = text;
+  mail.html = html;
+  mail.attachments = attachments;
 
   return mail;
 }
