@@ -1,3 +1,5 @@
+import { decodeMimeWords } from 'lettercoder';
+
 type Headers = { [k: string]: string | undefined };
 
 export interface LetterparserContentType {
@@ -73,6 +75,7 @@ function parseHeaders(
       headerValue += '\n' + line.trim();
     } else {
       if (headerName && headerValue) {
+        headerValue = decodeMimeWords(headerValue);
         if (headerName in headers) {
           const value = headers[headerName];
 

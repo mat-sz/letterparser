@@ -32,7 +32,7 @@ describe('parse', () => {
 
     expect(output).toMatchObject({
       headers: {
-        'X-Test-Header': 'test\ntest',
+        'X-Test-Header': 'test test',
       },
     });
   });
