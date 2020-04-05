@@ -10,6 +10,7 @@ export interface LetterparserMail {
   to?: string[];
   cc?: string[];
   bcc?: string[];
+  date?: Date;
   from?: string;
   attachments?: LetterparserAttachment[];
   html?: string;
@@ -37,6 +38,10 @@ export function extractMail(node: LetterparserNode) {
 
   if ('Subject' in node.headers) {
     mail.subject = node.headers['Subject'];
+  }
+
+  if ('Date' in node.headers && typeof node.headers['Date'] === 'string') {
+    mail.date = new Date(node.headers['Date']);
   }
 
   if (node.body instanceof Array) {
