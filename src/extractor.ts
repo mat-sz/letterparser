@@ -27,21 +27,15 @@ function extractBody(node: LetterparserNode) {
       contentType: node.contentType,
       body: node.body,
     });
-  } else if (node.body instanceof Array) {
-    for (let subnode of node.body) {
+  } else if (node.body instanceof Array || typeof node.body === 'object') {
+    const nodes = node.body instanceof Array ? node.body : [node.body];
+    for (let subnode of nodes) {
       const [_text, _html, _attachments] = extractBody(subnode);
       text += _text + '\n';
       html += _html + '\n';
       if (_attachments.length > 0) {
         attachments.push(..._attachments);
       }
-    }
-  } else if (typeof node.body === 'object') {
-    const [_text, _html, _attachments] = extractBody(node.body);
-    text += _text + '\n';
-    html += _html + '\n';
-    if (_attachments.length > 0) {
-      attachments.push(..._attachments);
     }
   } else if (node.contentType.type === 'text/html') {
     html = node.body as string;
