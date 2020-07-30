@@ -9,7 +9,7 @@ This library was created as an isomorphic alternative for [mailparser](https://g
 The following RFCs are supported (or will be) by letterparser:
 
 - [RFC 5322](https://tools.ietf.org/html/rfc5322.html)
-- [RFC 6532](https://tools.ietf.org/html/rfc5322.html)
+- [RFC 6532](https://tools.ietf.org/html/rfc6532.html)
 - [RFC 2046](https://tools.ietf.org/html/rfc2046.html)
 
 Parsing multipart and plain text messages is currently working, although the output is raw. A function for extracting the most commonly used data will be added in a future release.
