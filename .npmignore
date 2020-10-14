@@ -7,3 +7,4 @@ yarn.lock
 tsconfig.json
 logo.png
 .github
+.eslintrc.json
