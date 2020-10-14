@@ -27,10 +27,7 @@ function parseContentType(value: string): LetterparserContentType | undefined {
     return undefined;
   }
 
-  const split = value
-    .toLowerCase()
-    .split(';')
-    .map(s => s.trim());
+  const split = value.split(';').map(s => s.trim());
 
   let parameters: any = {};
   let encoding: string | undefined;
@@ -54,6 +51,8 @@ function parseContentType(value: string): LetterparserContentType | undefined {
       parameters[parameterSplit[0].toLowerCase()] = value;
     }
   }
+
+  split[0] = split[0].toLowerCase();
 
   if (typeof parameters['charset'] === 'string') {
     encoding = parameters['charset'].split('*')[0];
@@ -194,9 +193,9 @@ export function parseBody(
             'Multipart parsing failure (boundary lookahead failed) at line ' +
               lineIdx
           );
-        } else {
-          lookaheadBoundaryLineIdx += lineIdx + 1;
         }
+
+        lookaheadBoundaryLineIdx += lineIdx + 2;
 
         const [subcontents, newLineIdx] = parseBody(
           depth + 1,
@@ -271,7 +270,7 @@ export function parseBody(
       body: body,
     };
 
-    lineIdx = endIdx;
+    lineIdx = endIdx - 1;
   }
 
   return [contents, lineIdx] as const;

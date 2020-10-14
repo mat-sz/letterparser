@@ -101,7 +101,7 @@ describe('parse', () => {
 
   it('parses multipart messages', () => {
     const output = parse(
-      `Content-Type: multipart/alternative; boundary="boundary"\n\n--boundary\nContent-Type: text/plain\n\nHello world!\n\n--boundary\nContent-Type: text/plain\n\nHello, again!\n\n--boundary--`
+      `Content-Type: multipart/alternative; boundary="boundary"\n\n--boundary\nContent-Type: text/plain\n\nHello world!\n--boundary\nContent-Type: text/plain\n\nHello, again!\n--boundary--`
     );
 
     expect(output).toMatchObject({
@@ -152,5 +152,48 @@ describe('parse', () => {
     );
 
     expect(() => parse(input)).toThrowError('Maximum depth of 99 exceeded.');
+  });
+
+  // Issue #1: https://github.com/mat-sz/letterparser/issues/1
+  it('parses multipart messages with mixed-case boundaries', () => {
+    const output = parse(
+      'Content-Type: multipart/mixed; boundary="--_NmP-79d22631bd047a69-Part_1"\r\n' +
+        'From: me@myserver.com\r\n' +
+        'To: Mike@foo.bar\r\n' +
+        'Subject: New Subject\r\n' +
+        'Message-ID: <4392b49b-91b4-fad0-34a5-115a5cc96fa6@myserver.com>\r\n' +
+        'Date: Tue, 13 Oct 2020 19:12:21 +0000\r\n' +
+        'MIME-Version: 1.0\r\n' +
+        '\r\n' +
+        '----_NmP-79d22631bd047a69-Part_1\r\n' +
+        'Content-Type: text/plain; charset=utf-8\r\n' +
+        'Content-Transfer-Encoding: 7bit\r\n' +
+        '\r\n' +
+        'More words I have an attachment\r\n' +
+        '----_NmP-79d22631bd047a69-Part_1\r\n' +
+        'Content-Type: text/plain; name="c:/temp/foo.txt"\r\n' +
+        'Content-Transfer-Encoding: base64\r\n' +
+        'Content-Disposition: attachment; filename="c:/temp/foo.txt"\r\n' +
+        '\r\n' +
+        'U29tZSBzbWFsbCB3b3JkcyB0byB0ZXN0IGF0dGFjaG1lbnQ=\r\n' +
+        '----_NmP-79d22631bd047a69-Part_1--'
+    );
+
+    expect(output).toMatchObject({
+      body: [
+        {
+          contentType: {
+            type: 'text/plain',
+          },
+          body: 'More words I have an attachment',
+        },
+        {
+          contentType: {
+            type: 'text/plain',
+          },
+          body: 'Some small words to test attachment',
+        },
+      ],
+    });
   });
 });
