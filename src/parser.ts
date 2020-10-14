@@ -2,8 +2,10 @@ import { decodeMimeWords, decodeQuotedPrintable } from 'lettercoder';
 import { toByteArray } from 'base64-js';
 
 if (typeof TextDecoder === 'undefined') {
+  /* eslint-disable */
   // @ts-ignore Isomorphism.
   global['TextDecoder'] = require('util').TextDecoder;
+  /* eslint-enable */
 }
 
 type Headers = { [k: string]: string | undefined };
@@ -29,11 +31,11 @@ function parseContentType(value: string): LetterparserContentType | undefined {
 
   const split = value.split(';').map(s => s.trim());
 
-  let parameters: any = {};
+  const parameters: any = {};
   let encoding: string | undefined;
 
   if (split.length == 2) {
-    for (let parameter of split.slice(1)) {
+    for (const parameter of split.slice(1)) {
       const parameterSplit = parameter.split('=');
       let value = parameterSplit[1];
       if (parameterSplit.length > 2) {
@@ -72,7 +74,7 @@ function parseHeaders(
   lineStartIdx: number,
   lineEndIdx: number
 ) {
-  let headers: Headers = {};
+  const headers: Headers = {};
   let headerName: string | undefined;
   let headerValue: string | undefined;
   let lineIdx = lineStartIdx;
@@ -167,7 +169,7 @@ export function parseBody(
     lineIdx = newLineIdx;
   } else if (type?.startsWith('multipart/')) {
     const boundary = parameters['boundary'];
-    let contentsArray: LetterparserNode[] = [];
+    const contentsArray: LetterparserNode[] = [];
 
     if (!boundary) {
       throw new Error(
@@ -232,7 +234,7 @@ export function parseBody(
     };
   } else {
     const endIdx = lookaheadBoundaryLineIdx ?? lineEndIdx;
-    let stringBody: string = lines.slice(lineIdx, endIdx).join('\n');
+    const stringBody: string = lines.slice(lineIdx, endIdx).join('\n');
     let body: string | Uint8Array = stringBody;
 
     if (headers['Content-Transfer-Encoding']) {

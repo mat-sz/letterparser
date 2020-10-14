@@ -18,7 +18,7 @@ export interface LetterparserMail {
 }
 
 function extractBody(node: LetterparserNode) {
-  let attachments: LetterparserAttachment[] = [];
+  const attachments: LetterparserAttachment[] = [];
   let html = '';
   let text = '';
 
@@ -29,7 +29,7 @@ function extractBody(node: LetterparserNode) {
     });
   } else if (node.body instanceof Array || typeof node.body === 'object') {
     const nodes = node.body instanceof Array ? node.body : [node.body];
-    for (let subnode of nodes) {
+    for (const subnode of nodes) {
       const [_text, _html, _attachments] = extractBody(subnode);
       text += _text + '\n';
       html += _html + '\n';
@@ -46,7 +46,7 @@ function extractBody(node: LetterparserNode) {
   return [text, html, attachments] as const;
 }
 
-export function extractMail(node: LetterparserNode) {
+export function extractMail(node: LetterparserNode): LetterparserMail {
   const mail: LetterparserMail = {};
 
   if ('To' in node.headers) {

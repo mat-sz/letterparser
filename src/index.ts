@@ -21,7 +21,7 @@ export function extract(message: string | LetterparserNode): LetterparserMail {
 }
 
 export function parse(message: string): LetterparserNode {
-  let lines = message.replace(/\r/g, '').split('\n');
+  const lines = message.replace(/\r/g, '').split('\n');
   const [contents] = parseBody(1, lines, 0, lines.length);
   return contents;
 }
