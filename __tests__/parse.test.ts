@@ -196,4 +196,67 @@ describe('parse', () => {
       ],
     });
   });
+
+  // Issue #2: https://github.com/mat-sz/letterparser/issues/2
+  it('parses headers starting on new line', () => {
+    const output = parse(
+      'Example: hello\r\n' +
+        'Message-ID:\r\n' +
+        ' <xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx@xxxxxxxxxxxx.xxxxxxxx.prod.outlook.com>\r\n' +
+        'References:\r\n' +
+        ' <xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx@xxxxxxxxxxxx.xxxxxxxx.prod.outlook.com>\r\n' +
+        'In-Reply-To:\r\n' +
+        ' <xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx@xxxxxxxxxxxx.xxxxxxxx.prod.outlook.com>\r\n' +
+        'Content-Type: multipart/alternative;\r\n' +
+        ' boundary="_000_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXnamp_"\r\n' +
+        'MIME-Version: 1.0\r\n' +
+        '\r\n' +
+        '--_000_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXnamp_\r\n' +
+        'Content-Type: text/plain; charset="iso-8859-1"\r\n' +
+        'Content-Transfer-Encoding: quoted-printable\r\n' +
+        '\r\n' +
+        'example\r\n' +
+        '\r\n' +
+        '--_000_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXnamp_\r\n' +
+        'Content-Type: text/html; charset="iso-8859-1"\r\n' +
+        'Content-Transfer-Encoding: quoted-printable\r\n' +
+        '\r\n' +
+        '<html>\r\n' +
+        '<head>\r\n' +
+        '<meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Diso-8859-=\r\n' +
+        '1">\r\n' +
+        '</head>\r\n' +
+        '<body dir=3D"ltr">\r\n' +
+        'example\r\n' +
+        '</body>\r\n' +
+        '</html>\r\n' +
+        '\r\n' +
+        '--_000_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXnamp_--\r\n'
+    );
+
+    expect(output).toMatchObject({
+      body: [
+        {
+          contentType: {
+            type: 'text/plain',
+          },
+          body: 'example\n',
+        },
+        {
+          contentType: {
+            type: 'text/html',
+          },
+          body:
+            '<html>\n' +
+            '<head>\n' +
+            '<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">\n' +
+            '</head>\n' +
+            '<body dir="ltr">\n' +
+            'example\n' +
+            '</body>\n' +
+            '</html>\n',
+        },
+      ],
+    });
+  });
 });
