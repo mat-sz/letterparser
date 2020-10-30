@@ -259,4 +259,45 @@ describe('parse', () => {
       ],
     });
   });
+
+  it('parses messages created by Gmail', () => {
+    const output = parse(
+      'MIME-Version: 1.0\r\n' +
+        'Date: Fri, 30 Oct 2020 17:50:04 +0100\r\n' +
+        'Message-ID: <xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx@mail.gmail.com>\r\n' +
+        'Subject: Example\r\n' +
+        'From: XXXXXXX <xxxxxxxxxx@gmail.com>\r\n' +
+        'To: XXXXXXX <xxxxxxxxxx@gmail.com>\r\n' +
+        'Content-Type: multipart/alternative; boundary="0000000000000xxxxxxxxxxxxxxx"\r\n' +
+        '\r\n' +
+        '--0000000000000xxxxxxxxxxxxxxx\r\n' +
+        'Content-Type: text/plain; charset="UTF-8"\r\n' +
+        '\r\n' +
+        'Example email from Gmail\r\n' +
+        '\r\n' +
+        '--0000000000000xxxxxxxxxxxxxxx\r\n' +
+        'Content-Type: text/html; charset="UTF-8"\r\n' +
+        '\r\n' +
+        '<div dir="ltr">Example email from Gmail</div>\r\n' +
+        '\r\n' +
+        '--0000000000000xxxxxxxxxxxxxxx--\r\n'
+    );
+
+    expect(output).toMatchObject({
+      body: [
+        {
+          contentType: {
+            type: 'text/plain',
+          },
+          body: 'Example email from Gmail\n',
+        },
+        {
+          contentType: {
+            type: 'text/html',
+          },
+          body: '<div dir="ltr">Example email from Gmail</div>\n',
+        },
+      ],
+    });
+  });
 });
