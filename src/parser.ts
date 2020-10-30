@@ -129,7 +129,7 @@ export function parseBody(
   lineStartIdx: number,
   lineEndIdx: number,
   lookaheadBoundaryLineIdx?: number
-) {
+): readonly [LetterparserNode, number] {
   if (depth > MAX_DEPTH) {
     throw new Error('Maximum depth of ' + MAX_DEPTH + ' exceeded.');
   }
@@ -241,8 +241,10 @@ export function parseBody(
       if (parsedType.encoding) {
         switch (headers['Content-Transfer-Encoding'].toLowerCase()) {
           case 'base64':
-            const decoder = new TextDecoder(parsedType.encoding);
-            body = decoder.decode(toByteArray(stringBody));
+            {
+              const decoder = new TextDecoder(parsedType.encoding);
+              body = decoder.decode(toByteArray(stringBody));
+            }
             break;
           case 'quoted-printable':
             body = decodeQuotedPrintable(

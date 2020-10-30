@@ -21,6 +21,7 @@
   "rules": {
     "@typescript-eslint/ban-types": "off",
     "@typescript-eslint/no-explicit-any": "off",
-    "no-empty": "off"
+    "no-empty": "off",
+    "prefer-const": "off"
   }
 }
