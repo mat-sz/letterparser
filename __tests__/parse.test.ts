@@ -235,6 +235,14 @@ describe('parse', () => {
     );
 
     expect(output).toMatchObject({
+      headers: {
+        'Message-Id':
+          '<xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx@xxxxxxxxxxxx.xxxxxxxx.prod.outlook.com>',
+        References:
+          '<xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx@xxxxxxxxxxxx.xxxxxxxx.prod.outlook.com>',
+        'In-Reply-To':
+          '<xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx@xxxxxxxxxxxx.xxxxxxxx.prod.outlook.com>',
+      },
       body: [
         {
           contentType: {
