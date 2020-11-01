@@ -82,7 +82,7 @@ function parseHeaders(
   for (; lineIdx < lineEndIdx; lineIdx++) {
     const line = lines[lineIdx];
 
-    if (line.startsWith(' ')) {
+    if (line.startsWith(' ') || line.startsWith('\t')) {
       if (typeof headerName !== 'string' || typeof headerValue !== 'string') {
         throw new Error(
           'Unexpected space at the beginning of line ' + (lineIdx + 1)

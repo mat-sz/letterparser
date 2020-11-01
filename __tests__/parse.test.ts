@@ -308,4 +308,41 @@ describe('parse', () => {
       ],
     });
   });
+
+  // Issue #3: https://github.com/mat-sz/letterparser/issues/3
+  it('parses multi-line headers with new lines starting with \\t', () => {
+    const output = parse(
+      'Content-Type: multipart/alternative;\r\n' +
+        '\tboundary="0000000000000xxxxxxxxxxxxxxx"\r\n' +
+        '\r\n' +
+        '--0000000000000xxxxxxxxxxxxxxx\r\n' +
+        'Content-Type: text/plain; charset="UTF-8"\r\n' +
+        '\r\n' +
+        'Example email from Gmail\r\n' +
+        '\r\n' +
+        '--0000000000000xxxxxxxxxxxxxxx\r\n' +
+        'Content-Type: text/html; charset="UTF-8"\r\n' +
+        '\r\n' +
+        '<div dir="ltr">Example email from Gmail</div>\r\n' +
+        '\r\n' +
+        '--0000000000000xxxxxxxxxxxxxxx--\r\n'
+    );
+
+    expect(output).toMatchObject({
+      body: [
+        {
+          contentType: {
+            type: 'text/plain',
+          },
+          body: 'Example email from Gmail\n',
+        },
+        {
+          contentType: {
+            type: 'text/html',
+          },
+          body: '<div dir="ltr">Example email from Gmail</div>\n',
+        },
+      ],
+    });
+  });
 });
