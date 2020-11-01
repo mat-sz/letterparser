@@ -37,6 +37,12 @@ function parseContentType(value: string): LetterparserContentType | undefined {
   if (split.length == 2) {
     for (const parameter of split.slice(1)) {
       const parameterSplit = parameter.split('=');
+      const name = parameterSplit[0].toLowerCase().trim();
+      if (parameterSplit.length === 1) {
+        parameters[name] = '';
+        continue;
+      }
+
       let value = parameterSplit[1];
       if (parameterSplit.length > 2) {
         value = parameterSplit.slice(1).join('=');
@@ -50,7 +56,7 @@ function parseContentType(value: string): LetterparserContentType | undefined {
         value = value.substring(0, value.length - 1);
       }
 
-      parameters[parameterSplit[0].toLowerCase()] = value;
+      parameters[name] = value;
     }
   }
 
