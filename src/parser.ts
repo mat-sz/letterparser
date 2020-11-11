@@ -84,6 +84,8 @@ function parseHeaders(
   let headerName: string | undefined;
   let headerValue: string | undefined;
   let lineIdx = lineStartIdx;
+  let contentType: LetterparserContentType | undefined;
+  let boundary: string | undefined;
 
   for (; lineIdx < lineEndIdx; lineIdx++) {
     const line = lines[lineIdx];
@@ -110,9 +112,24 @@ function parseHeaders(
         } else {
           headers[headerName] = headerValue;
         }
+
+        if (headerName === 'Content-Type') {
+          contentType = parseContentType(headerValue);
+          if (
+            contentType?.type?.startsWith('multipart') &&
+            contentType?.parameters?.boundary
+          ) {
+            boundary = contentType?.parameters?.boundary;
+          }
+        }
       }
 
       if (line === '') {
+        break;
+      }
+
+      if (boundary && line.startsWith('--' + boundary)) {
+        lineIdx--;
         break;
       }
 
@@ -126,7 +143,12 @@ function parseHeaders(
     }
   }
 
-  return [headers, lineIdx] as const;
+  // Default Content-Type.
+  if (!contentType && !('Content-Type' in headers)) {
+    contentType = parseContentType('text/plain');
+  }
+
+  return [headers, contentType, lineIdx] as const;
 }
 
 export function parseBody(
@@ -142,8 +164,11 @@ export function parseBody(
 
   let contents: LetterparserNode;
 
-  let [headers, lineIdx] = parseHeaders(lines, lineStartIdx, lineEndIdx);
-  const parsedType = parseContentType(headers['Content-Type'] ?? 'text/plain');
+  let [headers, parsedType, lineIdx] = parseHeaders(
+    lines,
+    lineStartIdx,
+    lineEndIdx
+  );
   if (!parsedType) {
     throw new Error(
       'Invalid content type "' +

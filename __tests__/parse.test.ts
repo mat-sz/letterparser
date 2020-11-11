@@ -345,4 +345,37 @@ describe('parse', () => {
       ],
     });
   });
+
+  it('parses multipart messages with no newline before boundary', () => {
+    const output = parse(
+      'Content-Type: multipart/alternative;\r\n' +
+        '\tboundary="0000000000000xxxxxxxxxxxxxxx"\r\n' +
+        '--0000000000000xxxxxxxxxxxxxxx\r\n' +
+        'Content-Type: text/plain; charset="UTF-8"\r\n' +
+        '\r\n' +
+        'Example email from Gmail\r\n' +
+        '--0000000000000xxxxxxxxxxxxxxx\r\n' +
+        'Content-Type: text/html; charset="UTF-8"\r\n' +
+        '\r\n' +
+        '<div dir="ltr">Example email from Gmail</div>\r\n' +
+        '--0000000000000xxxxxxxxxxxxxxx--\r\n'
+    );
+
+    expect(output).toMatchObject({
+      body: [
+        {
+          contentType: {
+            type: 'text/plain',
+          },
+          body: 'Example email from Gmail',
+        },
+        {
+          contentType: {
+            type: 'text/html',
+          },
+          body: '<div dir="ltr">Example email from Gmail</div>',
+        },
+      ],
+    });
+  });
 });
