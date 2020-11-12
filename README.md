@@ -2,6 +2,15 @@
   <img src="https://raw.githubusercontent.com/mat-sz/letterparser/master/logo.png" alt="letterparser" width="700">
 </h1>
 
+<p align="center">
+<img alt="workflow" src="https://img.shields.io/github/workflow/status/mat-sz/letterparser/Node.js%20CI%20(yarn)">
+<a href="https://npmjs.com/package/letterparser">
+<img alt="npm" src="https://img.shields.io/npm/v/letterparser">
+<img alt="npm" src="https://img.shields.io/npm/dw/letterparser">
+<img alt="NPM" src="https://img.shields.io/npm/l/letterparser">
+</a>
+</p>
+
 **letterparser** is a parser library created for parsing e-mail messages. The library is written in TypeScript, fully supports both browser and server environments. The performance may not be the best at the current stage of development, parsing large messages is not recommended.
 
 This library was created as an isomorphic alternative for [mailparser](https://github.com/nodemailer/mailparser).
