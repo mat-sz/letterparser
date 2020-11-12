@@ -29,6 +29,10 @@ Parsing multipart and plain text messages is currently working, although the out
 
 ## Usage
 
+> **WARNING!** [node.js built with full ICU is required](https://nodejs.org/api/intl.html). (full-icu NPM package may work as a substitute, although this is not recommended.)
+>
+> By default, recent node.js versions ship full ICU binaries. Incomplete ICU will result in bad encoding errors.
+
 ### General information
 
 To get information about the message, use `extract`:
