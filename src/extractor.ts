@@ -13,8 +13,21 @@ export interface LetterparserMail {
   date?: Date;
   from?: string;
   attachments?: LetterparserAttachment[];
+
+  /**
+   * HTML email data.
+   */
   html?: string;
+
+  /**
+   * Plaintext email data.
+   */
   text?: string;
+
+  /**
+   * AMP for Email data.
+   * More information: https://amp.dev/documentation/guides-and-tutorials/learn/email-spec/amp-email-structure/
+   */
   amp?: string;
 }
 
