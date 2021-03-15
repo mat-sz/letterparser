@@ -15,12 +15,14 @@ export interface LetterparserMail {
   attachments?: LetterparserAttachment[];
   html?: string;
   text?: string;
+  amp?: string;
 }
 
 function extractBody(node: LetterparserNode) {
   const attachments: LetterparserAttachment[] = [];
   let html = '';
   let text = '';
+  let amp = '';
 
   if (node.body instanceof Uint8Array) {
     attachments.push({
@@ -30,20 +32,23 @@ function extractBody(node: LetterparserNode) {
   } else if (node.body instanceof Array || typeof node.body === 'object') {
     const nodes = node.body instanceof Array ? node.body : [node.body];
     for (const subnode of nodes) {
-      const [_text, _html, _attachments] = extractBody(subnode);
-      text += _text + '\n';
-      html += _html + '\n';
+      const [_text, _html, _amp, _attachments] = extractBody(subnode);
+      text += _text ? _text + '\n' : '';
+      html += _html ? _html + '\n' : '';
+      amp += _amp ? _amp + '\n' : '';
       if (_attachments.length > 0) {
         attachments.push(..._attachments);
       }
     }
   } else if (node.contentType.type === 'text/html') {
     html = node.body as string;
+  } else if (node.contentType.type === 'text/x-amp-html') {
+    amp = node.body as string;
   } else if (node.contentType.type.startsWith('text/')) {
     text = node.body as string;
   }
 
-  return [text, html, attachments] as const;
+  return [text, html, amp, attachments] as const;
 }
 
 export function extractMail(node: LetterparserNode): LetterparserMail {
@@ -73,10 +78,11 @@ export function extractMail(node: LetterparserNode): LetterparserMail {
     mail.date = new Date(node.headers['Date']);
   }
 
-  const [text, html, attachments] = extractBody(node);
+  const [text, html, amp, attachments] = extractBody(node);
 
-  mail.text = text;
-  mail.html = html;
+  mail.text = text.trim();
+  mail.html = html.trim();
+  mail.amp = amp.trim() || undefined;
   mail.attachments = attachments;
 
   return mail;
