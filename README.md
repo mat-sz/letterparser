@@ -66,6 +66,7 @@ export interface LetterparserMail {
   attachments?: LetterparserAttachment[];
   html?: string;
   text?: string;
+  amp?: string;
 }
 ```
 
