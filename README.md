@@ -38,8 +38,8 @@ Parsing multipart and plain text messages is currently working, although the out
 To get information about the message, use `extract`:
 
 ```js
-import { parse } from 'letterparser';
-let res = parse(`Date: Wed, 01 Apr 2020 00:00:00 -0000
+import { extract } from 'letterparser';
+let res = extract(`Date: Wed, 01 Apr 2020 00:00:00 -0000
 From: A <a@example.com>
 To: B <b@example.com>
 Subject: Hello world!
