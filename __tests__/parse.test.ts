@@ -443,4 +443,30 @@ describe('parse', () => {
       ],
     });
   });
+
+  // Issue #9: https://github.com/mat-sz/letterparser/issues/9
+  it('parses Content-Type using semicolon as separation between multiple parameters', () => {
+    const output = parse(
+      'MIME-Version: 1.0\n' +
+        'Content-Type: multipart/alternative; boundary=xx-00000000000000000000000000000000; charset=UTF-8\n' +
+        '\n' +
+        '--xx-00000000000000000000000000000000\n' +
+        'Content-Type: text/plain; charset=UTF-8\n' +
+        'Content-Transfer-Encoding: quoted-printable\n' +
+        '\n' +
+        'Hello world.\n' +
+        '--xx-00000000000000000000000000000000--'
+    );
+
+    expect(output).toMatchObject({
+      body: [
+        {
+          contentType: {
+            type: 'text/plain',
+          },
+          body: 'Hello world.',
+        },
+      ],
+    });
+  });
 });

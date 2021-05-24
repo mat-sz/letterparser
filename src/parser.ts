@@ -34,7 +34,7 @@ function parseContentType(value: string): LetterparserContentType | undefined {
   const parameters: any = {};
   let encoding: string | undefined;
 
-  if (split.length == 2) {
+  if (split.length >= 2) {
     for (const parameter of split.slice(1)) {
       const parameterSplit = parameter.split('=');
       const name = parameterSplit[0].toLowerCase().trim();
