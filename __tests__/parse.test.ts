@@ -444,6 +444,20 @@ describe('parse', () => {
     });
   });
 
+  // Issue #8: https://github.com/mat-sz/letterparser/issues/8
+  it('parses body with Content-Transfer-Encoding: base64 (text and line breaks)', () => {
+    const output = parse(
+      `Content-Type: text/plain\nContent-Transfer-Encoding: base64\n\nSGVsb\nG8gd2\n9ybGQ=`
+    );
+
+    expect(output).toMatchObject({
+      contentType: {
+        type: 'text/plain',
+      },
+      body: 'Hello world',
+    });
+  });
+
   // Issue #9: https://github.com/mat-sz/letterparser/issues/9
   it('parses Content-Type using semicolon as separation between multiple parameters', () => {
     const output = parse(

@@ -265,12 +265,19 @@ export function parseBody(
     };
   } else {
     const endIdx = lookaheadBoundaryLineIdx ?? lineEndIdx;
-    const stringBody: string = lines.slice(lineIdx, endIdx).join('\n');
-    let body: string | Uint8Array = stringBody;
+    const linesSlice = lines.slice(lineIdx, endIdx);
+    let body: string | Uint8Array = linesSlice.join('\n');
 
     if (headers['Content-Transfer-Encoding']) {
+      const transferEncoding = headers[
+        'Content-Transfer-Encoding'
+      ].toLowerCase();
+
+      const stringBody =
+        transferEncoding === 'base64' ? linesSlice.join('') : body;
+
       if (parsedType.encoding) {
-        switch (headers['Content-Transfer-Encoding'].toLowerCase()) {
+        switch (transferEncoding) {
           case 'base64':
             {
               const decoder = new TextDecoder(parsedType.encoding);
@@ -285,15 +292,12 @@ export function parseBody(
             break;
         }
       } else {
-        switch (headers['Content-Transfer-Encoding'].toLowerCase()) {
+        switch (transferEncoding) {
           case 'base64':
             body = toByteArray(stringBody);
             break;
           case 'quoted-printable':
-            body = decodeQuotedPrintable(
-              stringBody,
-              parsedType.encoding
-            ) as Uint8Array;
+            body = decodeQuotedPrintable(stringBody) as Uint8Array;
             break;
         }
       }
