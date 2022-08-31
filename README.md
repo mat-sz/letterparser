@@ -55,6 +55,7 @@ The function returns `LetterparserMail`:
 export interface LetterparserAttachment {
   contentType: LetterparserContentType;
   body: string | Uint8Array;
+  contentId?: string;
 }
 
 export interface LetterparserMail {
@@ -101,3 +102,11 @@ interface LetterparserNode {
   body: LetterparserNode | LetterparserNode[] | string | Uint8Array;
 }
 ```
+
+Headers names are normalized to be camel case with dashes.
+
+E.g.
+
+`Content-ID` becomes `Content-Id`
+
+`content-type` becomes `Content-Type`

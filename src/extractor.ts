@@ -3,6 +3,7 @@ import { LetterparserNode, LetterparserContentType } from './parser';
 export interface LetterparserAttachment {
   contentType: LetterparserContentType;
   body: string | Uint8Array;
+  contentId?: string;
 }
 
 export interface LetterparserMail {
@@ -37,10 +38,27 @@ function extractBody(node: LetterparserNode) {
   let text = '';
   let amp = '';
 
-  if (node.body instanceof Uint8Array) {
+  if (
+    node.body instanceof Uint8Array ||
+    (typeof node.body === 'string' &&
+      node.headers['Content-Disposition']?.startsWith('attachment'))
+  ) {
+    let contentId = node.headers['Content-Id'];
+    if (contentId) {
+      const start = contentId.indexOf('<');
+      const end = contentId.indexOf('>');
+
+      if (start !== -1 && end !== -1 && start < end) {
+        contentId = contentId.substring(start + 1, end);
+      } else {
+        contentId = contentId.trim();
+      }
+    }
+
     attachments.push({
       contentType: node.contentType,
       body: node.body,
+      contentId,
     });
   } else if (node.body instanceof Array || typeof node.body === 'object') {
     const nodes = node.body instanceof Array ? node.body : [node.body];

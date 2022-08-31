@@ -67,4 +67,54 @@ Some message.`);
         '</html>',
     });
   });
+
+  it('extracts content ID along with the attachments', () => {
+    const output = extract(`Date: Sun, 24 Oct 2021 05:00:03 +0000
+From: "Lorem Ipsum" <lorem@ipsum.com>
+To: "Foo Bar" <foobor@test.com>
+Cc: "Abc Def" <abc@def.com>
+Bcc: <fgh@jkl.com>, <test2@test.com>, "Name" <test3@test.com>
+Message-ID: <56y7xuld2n9-1635051603230@ipsum.com>
+Subject: =?utf-8?B?8J+agCBJc3N1ZSA0OSE=?=
+MIME-Version: 1.0
+X-Abc: asdildffdişfsdi
+Content-Type: multipart/mixed; boundary=tdplbi0e8pj
+
+--tdplbi0e8pj
+Content-Type: multipart/alternative; boundary=oagdypniyp
+
+--oagdypniyp
+Content-Type: text/plain; charset=UTF-8
+
+Hi,
+I'm a simple text.
+
+--oagdypniyp
+Content-Type: text/html; charset=UTF-8
+
+Hi,
+I'm <strong>a bold</strong> text.
+
+--oagdypniyp--
+--tdplbi0e8pj
+Content-Type: image/png; charset=UTF-8
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment;filename="test.png"
+Content-ID: <abcdef-1635051603230@ipsum.com>
+
+iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII
+
+--tdplbi0e8pj--`);
+
+    expect(output).toMatchObject({
+      html: "Hi,\nI'm <strong>a bold</strong> text.",
+      text: "Hi,\nI'm a simple text.",
+      from: '"Lorem Ipsum" <lorem@ipsum.com>',
+      to: ['"Foo Bar" <foobor@test.com>'],
+    });
+
+    expect(output.attachments?.[0]!.contentId).toBe(
+      'abcdef-1635051603230@ipsum.com'
+    );
+  });
 });
