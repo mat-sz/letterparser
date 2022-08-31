@@ -276,7 +276,7 @@ export function parseBody(
       const stringBody =
         transferEncoding === 'base64' ? linesSlice.join('') : body;
 
-      if (parsedType.encoding) {
+      if (parsedType.type.startsWith('text/')) {
         switch (transferEncoding) {
           case 'base64':
             {
