@@ -1,7 +1,9 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "es6",
     "module": "commonjs",
+    "esModuleInterop": true,
+    "moduleResolution": "node",
     "declaration": true,
     "outDir": "./lib",
     "lib": ["es6", "DOM"],
@@ -9,5 +11,5 @@
     "strict": true
   },
   "include": ["src"],
-  "exclude": ["node_modules", "**/__tests__/*", "src/run.ts"]
+  "exclude": ["node_modules", "**/__tests__/*"]
 }

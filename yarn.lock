@@ -902,6 +902,11 @@ base64-js@^1.3.1:
   resolved "https://registry.yarnpkg.com/base64-js/-/base64-js-1.3.1.tgz#58ece8cb75dd07e71ed08c736abc5fac4dbf8df1"
   integrity sha512-mLQ4i2QO1ytvGWFWmcngKO//JXAQueZvwEKtjgQFM4jIK0kU+ytMfplL8j+n5mspOfjHwoAg+9yhb7BwAHm36g==
 
+base64-js@^1.5.1:
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/base64-js/-/base64-js-1.5.1.tgz#1b1b440160a5bf7ad40b650f095963481903930a"
+  integrity sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==
+
 base@^0.11.1:
   version "0.11.2"
   resolved "https://registry.yarnpkg.com/base/-/base-0.11.2.tgz#7bde5ced145b6d551a90db87f83c558b4eb48a8f"
@@ -2874,12 +2879,12 @@ kleur@^3.0.3:
   resolved "https://registry.yarnpkg.com/kleur/-/kleur-3.0.3.tgz#a79c9ecc86ee1ce3fa6206d1216c501f147fc07e"
   integrity sha512-eTIzlVOSUR+JxdDFepEYcBMtZ9Qqdef+rnzWdRZuMbOywu5tO2w2N7rqjoANZ5k9vywhL6Br1VRjUIgTQx4E8w==
 
-lettercoder@^0.0.4:
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/lettercoder/-/lettercoder-0.0.4.tgz#7593c7aa0ba2a077019f960058a7f62fa16acdef"
-  integrity sha512-mBhgv/zXcF3B/6+up4YYm1l2cuf/b7CjKr895ydUBUzI+OhQ1NMl8JZBv1KUIPsPEamziAZ4242b7LoUWI9Lfg==
+lettercoder@^0.0.5:
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/lettercoder/-/lettercoder-0.0.5.tgz#da6df02e5b3d2929b3c41369c5769d954e91ad5a"
+  integrity sha512-t/AQgvlY5U8mBnxY4968nSxj+YRfP1MM0h6GgR5lcw2PpBhkAf7SuRxug1i+KgJAk5q0CvOVe1j3xMg+oI80/g==
   dependencies:
-    base64-js "^1.3.1"
+    base64-js "^1.5.1"
 
 leven@^3.1.0:
   version "3.1.0"
@@ -4523,10 +4528,10 @@ typedarray-to-buffer@^3.1.5:
   dependencies:
     is-typedarray "^1.0.0"
 
-typescript@^3.7.4:
-  version "3.8.3"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.8.3.tgz#409eb8544ea0335711205869ec458ab109ee1061"
-  integrity sha512-MYlEfn5VrLNsgudQTVJeNaQFUAI7DkhnOjdpAp4T+ku1TfQClewlbSuTVHiA+8skNBgaf02TL/kLOvig4y3G8w==
+typescript@^4.8.3:
+  version "4.8.3"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.8.3.tgz#d59344522c4bc464a65a730ac695007fdb66dd88"
+  integrity sha512-goMHfm00nWPa8UvR/CPSvykqf6dVV8x/dp0c5mFTMTIu0u0FlGWRioyy7Nn0PGAdHxpJZnuO/ut+PpQ8UiHAig==
 
 union-value@^1.0.0:
   version "1.0.1"
