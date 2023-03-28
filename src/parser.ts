@@ -3,8 +3,16 @@ import { toByteArray } from 'base64-js';
 
 if (typeof TextDecoder === 'undefined') {
   /* eslint-disable */
+  const nodeVer = typeof process !== 'undefined' && process.versions?.node;
+  const nodeRequire = nodeVer
+    ? // @ts-ignore Isomorphism.
+      typeof __webpack_require__ === 'function'
+      ? // @ts-ignore Isomorphism.
+        __non_webpack_require__
+      : require
+    : undefined;
   // @ts-ignore Isomorphism.
-  global['TextDecoder'] = require('util').TextDecoder;
+  global['TextDecoder'] = nodeRequire('util').TextDecoder;
   /* eslint-enable */
 }
 
@@ -269,9 +277,8 @@ export function parseBody(
     let body: string | Uint8Array = linesSlice.join('\n');
 
     if (headers['Content-Transfer-Encoding']) {
-      const transferEncoding = headers[
-        'Content-Transfer-Encoding'
-      ].toLowerCase();
+      const transferEncoding =
+        headers['Content-Transfer-Encoding'].toLowerCase();
 
       const stringBody =
         transferEncoding === 'base64' ? linesSlice.join('') : body;
