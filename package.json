@@ -69,7 +69,7 @@
   },
   "dependencies": {
     "base64-js": "^1.5.1",
-    "lettercoder": "^0.0.5"
+    "lettercoder": "^0.0.6"
   },
   "exports": {
     ".": {
