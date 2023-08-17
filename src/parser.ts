@@ -1,6 +1,7 @@
 import { decodeMimeWords, decodeQuotedPrintable } from 'lettercoder';
 import { toByteArray } from 'base64-js';
-import { unquote } from './helpers';
+
+import { unquote } from './helpers.js';
 
 if (typeof TextDecoder === 'undefined') {
   /* eslint-disable */

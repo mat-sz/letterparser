@@ -1,5 +1,5 @@
-import { unquote } from './helpers';
-import { LetterparserNode, LetterparserContentType } from './parser';
+import { unquote } from './helpers.js';
+import { LetterparserNode, LetterparserContentType } from './parser.js';
 
 export interface LetterparserAttachment {
   contentType: LetterparserContentType;

@@ -1,4 +1,4 @@
-import { parse } from '../src';
+import { parse } from '../src/index.js';
 
 describe('parse', () => {
   it('parses just headers', () => {
@@ -147,9 +147,10 @@ describe('parse', () => {
   });
 
   it('throws when maximum depth is exceeded', () => {
-    const input = `Content-Type: multipart/alternative; boundary="boundary"\n\n--boundary\n`.repeat(
-      102
-    );
+    const input =
+      `Content-Type: multipart/alternative; boundary="boundary"\n\n--boundary\n`.repeat(
+        102
+      );
 
     expect(() => parse(input)).toThrowError('Maximum depth of 99 exceeded.');
   });

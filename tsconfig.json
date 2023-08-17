@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
     "target": "es6",
-    "module": "commonjs",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
     "esModuleInterop": true,
-    "moduleResolution": "node",
     "declaration": true,
     "outDir": "./lib",
     "lib": ["es6", "DOM"],

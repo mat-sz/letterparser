@@ -1,4 +1,4 @@
-import { extract } from '../src';
+import { extract } from '../src/index.js';
 
 describe('extract', () => {
   it('extracts information from a test message', () => {
