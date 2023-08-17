@@ -1,5 +1,6 @@
 import { decodeMimeWords, decodeQuotedPrintable } from 'lettercoder';
 import { toByteArray } from 'base64-js';
+import { unquote } from './helpers';
 
 if (typeof TextDecoder === 'undefined') {
   /* eslint-disable */
@@ -56,13 +57,7 @@ function parseContentType(value: string): LetterparserContentType | undefined {
         value = parameterSplit.slice(1).join('=');
       }
 
-      if (value.startsWith('"')) {
-        value = value.substring(1);
-      }
-
-      if (value.endsWith('"')) {
-        value = value.substring(0, value.length - 1);
-      }
+      value = unquote(value);
 
       parameters[name] = value;
     }

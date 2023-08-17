@@ -1,3 +1,4 @@
+import { unquote } from './helpers';
 import { LetterparserNode, LetterparserContentType } from './parser';
 
 export interface LetterparserAttachment {
@@ -6,13 +7,19 @@ export interface LetterparserAttachment {
   contentId?: string;
 }
 
+export interface LetterparserMailbox {
+  name?: string;
+  address: string;
+  raw: string;
+}
+
 export interface LetterparserMail {
   subject?: string;
-  to?: string[];
-  cc?: string[];
-  bcc?: string[];
+  to?: LetterparserMailbox[];
+  cc?: LetterparserMailbox[];
+  bcc?: LetterparserMailbox[];
   date?: Date;
-  from?: string;
+  from?: LetterparserMailbox;
   attachments?: LetterparserAttachment[];
 
   /**
@@ -82,30 +89,46 @@ function extractBody(node: LetterparserNode) {
   return [text, html, amp, attachments] as const;
 }
 
+function extractMailbox(raw: string): LetterparserMailbox {
+  const addressStart = raw.indexOf('<');
+  const addressEnd = raw.lastIndexOf('>');
+  if (addressStart !== -1 && addressEnd !== -1) {
+    const address = unquote(raw.substring(addressStart + 1, addressEnd).trim());
+    let name = unquote(raw.substring(0, addressStart).trim());
+    return {
+      address,
+      name,
+      raw,
+    };
+  } else {
+    return {
+      address: raw.trim(),
+      raw,
+    };
+  }
+}
+
+function extractMailboxes(raw?: string): LetterparserMailbox[] | undefined {
+  if (!raw) {
+    return undefined;
+  }
+
+  return raw.split(',').map(s => extractMailbox(s));
+}
+
 export function extractMail(node: LetterparserNode): LetterparserMail {
   const mail: LetterparserMail = {};
 
-  if ('To' in node.headers) {
-    mail.to = node.headers['To']?.split(',').map(s => s.trim());
-  }
+  mail.to = extractMailboxes(node.headers['To']);
+  mail.cc = extractMailboxes(node.headers['Cc']);
+  mail.bcc = extractMailboxes(node.headers['Bcc']);
+  mail.from = node.headers['From']
+    ? extractMailbox(node.headers['From'])
+    : undefined;
 
-  if ('Cc' in node.headers) {
-    mail.cc = node.headers['Cc']?.split(',').map(s => s.trim());
-  }
+  mail.subject = node.headers['Subject'];
 
-  if ('Bcc' in node.headers) {
-    mail.bcc = node.headers['Bcc']?.split(',').map(s => s.trim());
-  }
-
-  if ('From' in node.headers) {
-    mail.from = node.headers['From'];
-  }
-
-  if ('Subject' in node.headers) {
-    mail.subject = node.headers['Subject'];
-  }
-
-  if ('Date' in node.headers && typeof node.headers['Date'] === 'string') {
+  if (typeof node.headers['Date'] === 'string') {
     mail.date = new Date(node.headers['Date']);
   }
 

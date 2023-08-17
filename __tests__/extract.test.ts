@@ -13,8 +13,18 @@ Some message.`);
 
     expect(output).toMatchObject({
       text: 'Some message.',
-      from: 'A <a@example.com>',
-      to: ['B <b@example.com>'],
+      from: {
+        name: 'A',
+        address: 'a@example.com',
+        raw: 'A <a@example.com>',
+      },
+      to: [
+        {
+          name: 'B',
+          address: 'b@example.com',
+          raw: 'B <b@example.com>',
+        },
+      ],
       subject: 'Hello world!',
       date: new Date('Wed, 01 Apr 2020 00:00:00 -0000'),
     });
@@ -109,11 +119,21 @@ iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI
     expect(output).toMatchObject({
       html: "Hi,\nI'm <strong>a bold</strong> text.",
       text: "Hi,\nI'm a simple text.",
-      from: '"Lorem Ipsum" <lorem@ipsum.com>',
-      to: ['"Foo Bar" <foobor@test.com>'],
+      from: {
+        name: 'Lorem Ipsum',
+        address: 'lorem@ipsum.com',
+        raw: '"Lorem Ipsum" <lorem@ipsum.com>',
+      },
+      to: [
+        {
+          name: 'Foo Bar',
+          address: 'foobor@test.com',
+          raw: '"Foo Bar" <foobor@test.com>',
+        },
+      ],
     });
 
-    expect(output.attachments?.[0]!.contentId).toBe(
+    expect(output.attachments?.[0]?.contentId).toBe(
       'abcdef-1635051603230@ipsum.com'
     );
   });

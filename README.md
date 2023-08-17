@@ -52,6 +52,12 @@ Some message.`);
 The function returns `LetterparserMail`:
 
 ```ts
+export interface LetterparserMailbox {
+  name?: string;
+  address: string;
+  raw: string;
+}
+
 export interface LetterparserAttachment {
   contentType: LetterparserContentType;
   body: string | Uint8Array;
@@ -60,10 +66,10 @@ export interface LetterparserAttachment {
 
 export interface LetterparserMail {
   subject?: string;
-  to?: string[];
-  cc?: string[];
-  bcc?: string[];
-  from?: string;
+  to?: LetterparserMailbox[];
+  cc?: LetterparserMailbox[];
+  bcc?: LetterparserMailbox[];
+  from?: LetterparserMailbox;
   attachments?: LetterparserAttachment[];
   html?: string;
   text?: string;

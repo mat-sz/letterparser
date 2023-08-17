@@ -2347,10 +2347,10 @@ kleur@^3.0.3:
   resolved "https://registry.yarnpkg.com/kleur/-/kleur-3.0.3.tgz#a79c9ecc86ee1ce3fa6206d1216c501f147fc07e"
   integrity sha512-eTIzlVOSUR+JxdDFepEYcBMtZ9Qqdef+rnzWdRZuMbOywu5tO2w2N7rqjoANZ5k9vywhL6Br1VRjUIgTQx4E8w==
 
-lettercoder@^0.0.5:
-  version "0.0.5"
-  resolved "https://registry.yarnpkg.com/lettercoder/-/lettercoder-0.0.5.tgz#da6df02e5b3d2929b3c41369c5769d954e91ad5a"
-  integrity sha512-t/AQgvlY5U8mBnxY4968nSxj+YRfP1MM0h6GgR5lcw2PpBhkAf7SuRxug1i+KgJAk5q0CvOVe1j3xMg+oI80/g==
+lettercoder@^0.0.6:
+  version "0.0.6"
+  resolved "https://registry.yarnpkg.com/lettercoder/-/lettercoder-0.0.6.tgz#d3648411fff5455256a1e0414d6567ee0f524570"
+  integrity sha512-ob21sPYcaKdueDUZ4O95fslDAmfrIowtiARM0GEWpQxhSrFYxPbI77dGBeRqKZbtLBjHYwSwH7j9dQncXI5qrg==
   dependencies:
     base64-js "^1.5.1"
 
