@@ -1,10 +1,15 @@
 import { unquote } from './helpers.js';
-import { LetterparserNode, LetterparserContentType } from './parser.js';
+import {
+  LetterparserNode,
+  LetterparserContentType,
+  parseHeaderValue,
+} from './parser.js';
 
 export interface LetterparserAttachment {
   contentType: LetterparserContentType;
   body: string | Uint8Array;
   contentId?: string;
+  filename?: string;
 }
 
 export interface LetterparserMailbox {
@@ -45,10 +50,13 @@ function extractBody(node: LetterparserNode) {
   let text = '';
   let amp = '';
 
+  const parsedDisposition = node.headers['Content-Disposition']
+    ? parseHeaderValue(node.headers['Content-Disposition'])
+    : undefined;
   if (
     node.body instanceof Uint8Array ||
     (typeof node.body === 'string' &&
-      node.headers['Content-Disposition']?.startsWith('attachment'))
+      parsedDisposition?.firstValue === 'attachment')
   ) {
     let contentId = node.headers['Content-Id'];
     if (contentId) {
@@ -66,6 +74,10 @@ function extractBody(node: LetterparserNode) {
       contentType: node.contentType,
       body: node.body,
       contentId,
+      filename:
+        parsedDisposition?.parameters?.filename ||
+        node.contentType?.parameters?.name ||
+        node.headers['Content-Description'],
     });
   } else if (node.body instanceof Array || typeof node.body === 'object') {
     const nodes = node.body instanceof Array ? node.body : [node.body];

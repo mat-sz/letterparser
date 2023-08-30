@@ -34,9 +34,9 @@ export interface LetterparserNode {
 
 const MAX_DEPTH = 99;
 
-export function parseContentType(
+export function parseHeaderValue(
   value: string
-): LetterparserContentType | undefined {
+): { firstValue: string; parameters: Headers } | undefined {
   if (value.includes(',')) {
     return undefined;
   }
@@ -44,7 +44,6 @@ export function parseContentType(
   const split = value.split(';').map(s => s.trim());
 
   const parameters: any = {};
-  let encoding: string | undefined;
 
   if (split.length >= 2) {
     for (const parameter of split.slice(1)) {
@@ -68,14 +67,31 @@ export function parseContentType(
 
   split[0] = split[0].toLowerCase();
 
+  return {
+    firstValue: split[0],
+    parameters,
+  };
+}
+
+export function parseContentType(
+  value: string
+): LetterparserContentType | undefined {
+  const parsedValue = parseHeaderValue(value);
+  if (!parsedValue) {
+    return undefined;
+  }
+
+  let encoding: string | undefined;
+  const { firstValue, parameters } = parsedValue;
+
   if (typeof parameters['charset'] === 'string') {
     encoding = parameters['charset'].split('*')[0];
-  } else if (split[0].startsWith('text/')) {
+  } else if (firstValue.startsWith('text/')) {
     encoding = 'utf-8';
   }
 
   return {
-    type: split[0],
+    type: firstValue,
     encoding,
     parameters,
   };

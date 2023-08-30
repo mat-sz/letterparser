@@ -136,5 +136,6 @@ iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI
     expect(output.attachments?.[0]?.contentId).toBe(
       'abcdef-1635051603230@ipsum.com'
     );
+    expect(output.attachments?.[0]?.filename).toBe('test.png');
   });
 });

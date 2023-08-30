@@ -62,6 +62,7 @@ export interface LetterparserAttachment {
   contentType: LetterparserContentType;
   body: string | Uint8Array;
   contentId?: string;
+  filename?: string;
 }
 
 export interface LetterparserMail {
