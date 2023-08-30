@@ -1,4 +1,5 @@
 import { parse } from '../src/index.js';
+import { parseContentType } from '../src/parser.js';
 
 describe('parse', () => {
   it('parses just headers', () => {
@@ -482,6 +483,20 @@ describe('parse', () => {
           body: 'Hello world.',
         },
       ],
+    });
+  });
+});
+
+describe('parseContentType', () => {
+  it('should parse mime words in parameters correctly', () => {
+    expect(
+      parseContentType(
+        'application/pdf; name="=?iso-8859-1?Q?pr=FCfbericht.pdf?="'
+      )
+    ).toMatchObject({
+      type: 'application/pdf',
+      encoding: undefined,
+      parameters: { name: 'prüfbericht.pdf' },
     });
   });
 });

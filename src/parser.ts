@@ -34,7 +34,9 @@ export interface LetterparserNode {
 
 const MAX_DEPTH = 99;
 
-function parseContentType(value: string): LetterparserContentType | undefined {
+export function parseContentType(
+  value: string
+): LetterparserContentType | undefined {
   if (value.includes(',')) {
     return undefined;
   }
@@ -60,7 +62,7 @@ function parseContentType(value: string): LetterparserContentType | undefined {
 
       value = unquote(value);
 
-      parameters[name] = value;
+      parameters[name] = decodeMimeWords(value);
     }
   }
 
