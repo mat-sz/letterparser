@@ -1,7 +1,7 @@
 import { extract } from '../src/index.js';
 
 describe('extract', () => {
-  it('extracts information from a test message', () => {
+  it('should extract information from a test message', () => {
     const output = extract(`Date: Wed, 01 Apr 2020 00:00:00 -0000
 From: A <a@example.com>
 To: B <b@example.com>
@@ -31,7 +31,7 @@ Some message.`);
   });
 
   // Issue #5: https://github.com/mat-sz/letterparser/issues/5
-  it('extracts AMP data from a text/x-amp-html message', () => {
+  it('should extract AMP data from a text/x-amp-html message', () => {
     const output = extract(
       'Content-Type: multipart/alternative;\r\n' +
         '\tboundary="0000000000000xxxxxxxxxxxxxxx"\r\n' +
@@ -78,7 +78,7 @@ Some message.`);
     });
   });
 
-  it('extracts content ID along with the attachments', () => {
+  it('should extract content ID along with the attachments', () => {
     const output = extract(`Date: Sun, 24 Oct 2021 05:00:03 +0000
 From: "Lorem Ipsum" <lorem@ipsum.com>
 To: "Foo Bar" <foobor@test.com>

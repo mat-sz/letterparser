@@ -2,7 +2,7 @@ import { parse } from '../src/index.js';
 import { parseContentType } from '../src/parser.js';
 
 describe('parse', () => {
-  it('parses just headers', () => {
+  it('should parse headers by themselves', () => {
     const output = parse(`To: a@example.com\nContent-Type: text/invalid\n`);
 
     expect(output).toMatchObject({
@@ -17,7 +17,7 @@ describe('parse', () => {
     });
   });
 
-  it('parses just body (text/plain)', () => {
+  it('should parse body by itself (text/plain)', () => {
     const output = parse(`\nHello world`);
 
     expect(output).toMatchObject({
@@ -28,7 +28,7 @@ describe('parse', () => {
     });
   });
 
-  it('parses body with Content-Transfer-Encoding: base64 (text)', () => {
+  it('should parse body with Content-Transfer-Encoding: base64 (text)', () => {
     const output = parse(
       `Content-Type: text/plain\nContent-Transfer-Encoding: base64\n\nSGVsbG8gd29ybGQ=`
     );
@@ -41,7 +41,7 @@ describe('parse', () => {
     });
   });
 
-  it('parses body with Content-Transfer-Encoding: base64 (bytes)', () => {
+  it('should parse body with Content-Transfer-Encoding: base64 (bytes)', () => {
     const output = parse(
       `Content-Type: application/octet-stream\nContent-Transfer-Encoding: base64\n\nQUE=`
     );
@@ -54,7 +54,7 @@ describe('parse', () => {
     });
   });
 
-  it('parses body with Content-Transfer-Encoding: quoted-printable (text)', () => {
+  it('should parse body with Content-Transfer-Encoding: quoted-printable (text)', () => {
     const output = parse(
       `Content-Type: text/plain\nContent-Transfer-Encoding: quoted-printable\n\nHello world`
     );
@@ -67,7 +67,7 @@ describe('parse', () => {
     });
   });
 
-  it('parses body with Content-Transfer-Encoding: quoted-printable (bytes)', () => {
+  it('should parse body with Content-Transfer-Encoding: quoted-printable (bytes)', () => {
     const output = parse(
       `Content-Type: application/octet-stream\nContent-Transfer-Encoding: quoted-printable\n\n=41=41`
     );
@@ -80,7 +80,7 @@ describe('parse', () => {
     });
   });
 
-  it('parses multiline headers', () => {
+  it('should parse multiline headers', () => {
     const output = parse(`X-Test-Header: test\n test\n`);
 
     expect(output).toMatchObject({
@@ -90,7 +90,7 @@ describe('parse', () => {
     });
   });
 
-  it('parses multiple headers with the same name', () => {
+  it('should parse multiple headers with the same name', () => {
     const output = parse(`X-Test-Header: test\nX-Test-Header: test 2\n`);
 
     expect(output).toMatchObject({
@@ -100,7 +100,7 @@ describe('parse', () => {
     });
   });
 
-  it('parses multipart messages', () => {
+  it('should parse multipart messages', () => {
     const output = parse(
       `Content-Type: multipart/alternative; boundary="boundary"\n\n--boundary\nContent-Type: text/plain\n\nHello world!\n--boundary\nContent-Type: text/plain\n\nHello, again!\n--boundary--`
     );
@@ -123,7 +123,7 @@ describe('parse', () => {
     });
   });
 
-  it('parses message/*', () => {
+  it('should parse message/*', () => {
     const output = parse(
       `To: a@example.com\nContent-Type: message/rfc822\n\nTo: b@example.com\nContent-Type: text/plain\n\nHello world!`
     );
@@ -147,7 +147,7 @@ describe('parse', () => {
     });
   });
 
-  it('throws when maximum depth is exceeded', () => {
+  it('should throw when maximum depth is exceeded', () => {
     const input =
       `Content-Type: multipart/alternative; boundary="boundary"\n\n--boundary\n`.repeat(
         102
@@ -157,7 +157,7 @@ describe('parse', () => {
   });
 
   // Issue #1: https://github.com/mat-sz/letterparser/issues/1
-  it('parses multipart messages with mixed-case boundaries', () => {
+  it('should parse multipart messages with mixed-case boundaries', () => {
     const output = parse(
       'Content-Type: multipart/mixed; boundary="--_NmP-79d22631bd047a69-Part_1"\r\n' +
         'From: me@myserver.com\r\n' +
@@ -200,7 +200,7 @@ describe('parse', () => {
   });
 
   // Issue #2: https://github.com/mat-sz/letterparser/issues/2
-  it('parses headers starting on new line', () => {
+  it('should parse headers starting on new line', () => {
     const output = parse(
       'Example: hello\r\n' +
         'Message-ID:\r\n' +
@@ -270,7 +270,7 @@ describe('parse', () => {
     });
   });
 
-  it('parses messages created by Gmail', () => {
+  it('should parse messages created by Gmail', () => {
     const output = parse(
       'MIME-Version: 1.0\r\n' +
         'Date: Fri, 30 Oct 2020 17:50:04 +0100\r\n' +
@@ -312,7 +312,7 @@ describe('parse', () => {
   });
 
   // Issue #3: https://github.com/mat-sz/letterparser/issues/3
-  it('parses multi-line headers with new lines starting with \\t', () => {
+  it('should parse multi-line headers with new lines starting with \\t', () => {
     const output = parse(
       'Content-Type: multipart/alternative;\r\n' +
         '\tboundary="0000000000000xxxxxxxxxxxxxxx"\r\n' +
@@ -348,7 +348,7 @@ describe('parse', () => {
     });
   });
 
-  it('parses multipart messages with no newline before boundary', () => {
+  it('should parse multipart messages with no newline before boundary', () => {
     const output = parse(
       'Content-Type: multipart/alternative;\r\n' +
         '\tboundary="0000000000000xxxxxxxxxxxxxxx"\r\n' +
@@ -382,7 +382,7 @@ describe('parse', () => {
   });
 
   // Issue #5: https://github.com/mat-sz/letterparser/issues/5
-  it('parses multipart messages with a text/x-amp-html part', () => {
+  it('should parse multipart messages with a text/x-amp-html part', () => {
     const output = parse(
       'Content-Type: multipart/alternative;\r\n' +
         '\tboundary="0000000000000xxxxxxxxxxxxxxx"\r\n' +
@@ -447,7 +447,7 @@ describe('parse', () => {
   });
 
   // Issue #8: https://github.com/mat-sz/letterparser/issues/8
-  it('parses body with Content-Transfer-Encoding: base64 (text and line breaks)', () => {
+  it('should parse body with Content-Transfer-Encoding: base64 (text and line breaks)', () => {
     const output = parse(
       `Content-Type: text/plain\nContent-Transfer-Encoding: base64\n\nSGVsb\nG8gd2\n9ybGQ=`
     );
@@ -461,7 +461,7 @@ describe('parse', () => {
   });
 
   // Issue #9: https://github.com/mat-sz/letterparser/issues/9
-  it('parses Content-Type using semicolon as separation between multiple parameters', () => {
+  it('should parse Content-Type using semicolon as separation between multiple parameters', () => {
     const output = parse(
       'MIME-Version: 1.0\n' +
         'Content-Type: multipart/alternative; boundary=xx-00000000000000000000000000000000; charset=UTF-8\n' +
