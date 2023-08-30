@@ -1,6 +1,6 @@
 {
   "name": "letterparser",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Raw e-mail parsing with MIME and plaintext support (isomorphic)",
   "main": "./lib/cjs/index.js",
   "module": "./lib/esm/index.js",
