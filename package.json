@@ -5,6 +5,14 @@
   "main": "./lib/cjs/index.js",
   "module": "./lib/esm/index.js",
   "types": "./lib/esm/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./lib/cjs/index.js",
+      "import": "./lib/esm/index.js",
+      "types": "./lib/esm/index.d.ts"
+    }
+  },
+  "type": "module",
   "keywords": [
     "email",
     "e-mail",
@@ -25,8 +33,8 @@
   "scripts": {
     "prepare": "npm run build",
     "build": "npm run build:cjs && npm run build:esm",
-    "build:esm": "tsc --module es2015 --outDir lib/esm",
-    "build:cjs": "tsc --module commonjs --outDir lib/cjs",
+    "build:esm": "tsc --module esnext --outDir lib/esm && echo '{\"type\": \"module\"}' > lib/esm/package.json",
+    "build:cjs": "tsc --module commonjs --outDir lib/cjs && echo '{\"type\": \"commonjs\"}' > lib/cjs/package.json",
     "test": "jest",
     "lint": "eslint src"
   },
@@ -69,13 +77,6 @@
   },
   "dependencies": {
     "base64-js": "^1.5.1",
-    "lettercoder": "^0.0.6"
-  },
-  "exports": {
-    ".": {
-      "require": "./lib/cjs/index.js",
-      "import": "./lib/esm/index.js",
-      "types": "./lib/esm/index.d.ts"
-    }
+    "lettercoder": "^0.0.7"
   }
 }
