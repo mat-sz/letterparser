@@ -8,3 +8,6 @@ tsconfig.json
 logo.png
 .github
 .eslintrc.json
+coverage
+vite*js
+vitest.config.ts
