@@ -23,9 +23,9 @@ The following RFCs are supported (or will be) by letterparser:
 
 Parsing multipart and plain text messages is currently working, although the output is raw. A function for extracting the most commonly used data will be added in a future release.
 
-| Builder                                                  | Inbound SMTP                                   |
-| -------------------------------------------------------- | ---------------------------------------------- |
-| [letterbuilder](https://github.com/mat-sz/letterbuilder) | [microMTA](https://github.com/mat-sz/microMTA) |
+| Builder                                                  | SMTP client/server                                 |
+| -------------------------------------------------------- | -------------------------------------------------- |
+| [letterbuilder](https://github.com/mat-sz/letterbuilder) | [@typemail/smtp](https://github.com/typemail/smtp) |
 
 ## Usage
 
