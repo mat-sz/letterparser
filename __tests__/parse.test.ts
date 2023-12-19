@@ -486,6 +486,7 @@ describe('parse', () => {
     });
   });
 
+  // Issue #13: https://github.com/mat-sz/letterparser/issues/13
   it('should parse Content-Type values containing commas in quoted parameters', () => {
     const output = parse(
       `Content-Type: application/pdf; name="Hulick, Sam_AFPS Fee.pdf"\n\nABCDEF`
