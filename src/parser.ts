@@ -37,10 +37,6 @@ const MAX_DEPTH = 99;
 export function parseHeaderValue(
   value: string
 ): { firstValue: string; parameters: Headers } | undefined {
-  if (value.includes(',')) {
-    return undefined;
-  }
-
   const split = value.split(';').map(s => s.trim());
 
   const parameters: any = {};

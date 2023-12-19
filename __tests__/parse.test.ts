@@ -485,6 +485,25 @@ describe('parse', () => {
       ],
     });
   });
+
+  it('should parse Content-Type values containing commas in quoted parameters', () => {
+    const output = parse(
+      `Content-Type: application/pdf; name="Hulick, Sam_AFPS Fee.pdf"\n\nABCDEF`
+    );
+    expect(output).toMatchObject({
+      contentType: {
+        type: 'application/pdf',
+        encoding: undefined,
+        parameters: {
+          name: 'Hulick, Sam_AFPS Fee.pdf',
+        },
+      },
+      body: 'ABCDEF',
+      headers: {
+        'Content-Type': 'application/pdf; name="Hulick, Sam_AFPS Fee.pdf"',
+      },
+    });
+  });
 });
 
 describe('parseContentType', () => {
