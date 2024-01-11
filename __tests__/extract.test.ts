@@ -16,13 +16,13 @@ Some message.`);
       from: {
         name: 'A',
         address: 'a@example.com',
-        raw: 'A <a@example.com>',
+        raw: '"A" <a@example.com>',
       },
       to: [
         {
           name: 'B',
           address: 'b@example.com',
-          raw: 'B <b@example.com>',
+          raw: '"B" <b@example.com>',
         },
       ],
       subject: 'Hello world!',
@@ -137,5 +137,35 @@ iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI
       'abcdef-1635051603230@ipsum.com'
     );
     expect(output.attachments?.[0]?.filename).toBe('test.png');
+  });
+
+  // https://github.com/mat-sz/letterparser/issues/14
+  it('should handle mime words in from/to headers', () => {
+    const output =
+      extract(`Subject: =?utf-8?Q?Cancelled_Reservation_-_Automation_-_C's_Location;_Sensors;_Sensor2_-_CEDITtest?=
+To: "=?utf-8?Q?qaautomation@xxxystemsdev=2Eonmicrosoft=2Ecom?=" <qaautomation@xxxystemsdev.onmicrosoft.com>
+From: "=?utf-8?Q?sgmh@xxx=2Elocal?=" <sgmh@xxx.local>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+
+Some message.`);
+
+    expect(output).toMatchObject({
+      text: 'Some message.',
+      from: {
+        name: 'sgmh@xxx.local',
+        address: 'sgmh@xxx.local',
+        raw: '"sgmh@xxx.local" <sgmh@xxx.local>',
+      },
+      to: [
+        {
+          name: 'qaautomation@xxxystemsdev.onmicrosoft.com',
+          address: 'qaautomation@xxxystemsdev.onmicrosoft.com',
+          raw: '"qaautomation@xxxystemsdev.onmicrosoft.com" <qaautomation@xxxystemsdev.onmicrosoft.com>',
+        },
+      ],
+      subject:
+        "Cancelled Reservation - Automation - C's Location; Sensors; Sensor2 - CEDITtest",
+    });
   });
 });

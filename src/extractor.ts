@@ -1,3 +1,4 @@
+import { decodeMimeWords } from 'lettercoder';
 import { unquote } from './helpers.js';
 import {
   LetterparserNode,
@@ -106,11 +107,13 @@ function extractMailbox(raw: string): LetterparserMailbox {
   const addressEnd = raw.lastIndexOf('>');
   if (addressStart !== -1 && addressEnd !== -1) {
     const address = unquote(raw.substring(addressStart + 1, addressEnd).trim());
-    let name = unquote(raw.substring(0, addressStart).trim());
+    const name = decodeMimeWords(
+      unquote(raw.substring(0, addressStart).trim())
+    );
     return {
       address,
       name,
-      raw,
+      raw: `"${name}" <${address}>`,
     };
   } else {
     return {
