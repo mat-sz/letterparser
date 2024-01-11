@@ -3,21 +3,6 @@ import { toByteArray } from 'base64-js';
 
 import { unquote } from './helpers.js';
 
-if (typeof TextDecoder === 'undefined') {
-  /* eslint-disable */
-  const nodeVer = typeof process !== 'undefined' && process.versions?.node;
-  const nodeRequire = nodeVer
-    ? // @ts-ignore Isomorphism.
-      typeof __webpack_require__ === 'function'
-      ? // @ts-ignore Isomorphism.
-        __non_webpack_require__
-      : require
-    : undefined;
-  // @ts-ignore Isomorphism.
-  global['TextDecoder'] = nodeRequire('util').TextDecoder;
-  /* eslint-enable */
-}
-
 type Headers = { [k: string]: string | undefined };
 
 export interface LetterparserContentType {
