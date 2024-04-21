@@ -168,4 +168,34 @@ Some message.`);
         "Cancelled Reservation - Automation - C's Location; Sensors; Sensor2 - CEDITtest",
     });
   });
+
+  // https://github.com/mat-sz/letterparser/issues/16
+  it('should allow for commas if quoted', () => {
+    const output = extract(`Date: Wed, 01 Apr 2020 00:00:00 -0000
+From: "last, first" <a@example.com>
+To: "last, first" <b@example.com>
+Subject: Hello world!
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+
+Some message.`);
+
+    expect(output).toMatchObject({
+      text: 'Some message.',
+      from: {
+        name: 'last, first',
+        address: 'a@example.com',
+        raw: '"last, first" <a@example.com>',
+      },
+      to: [
+        {
+          name: 'last, first',
+          address: 'b@example.com',
+          raw: '"last, first" <b@example.com>',
+        },
+      ],
+      subject: 'Hello world!',
+      date: new Date('Wed, 01 Apr 2020 00:00:00 -0000'),
+    });
+  });
 });

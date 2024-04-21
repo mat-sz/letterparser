@@ -128,7 +128,27 @@ function extractMailboxes(raw?: string): LetterparserMailbox[] | undefined {
     return undefined;
   }
 
-  return raw.split(',').map(s => extractMailbox(s));
+  let items: LetterparserMailbox[] = [];
+  let current = '';
+  let quote = false;
+
+  for (let i = 0; i < raw.length; i++) {
+    if (raw[i] === '"' && raw[i - 1] !== '\\') {
+      quote = !quote;
+      current += raw[i];
+    } else if (raw[i] === ',' && !quote) {
+      items.push(extractMailbox(current.trim()));
+      current = '';
+    } else {
+      current += raw[i];
+    }
+  }
+
+  if (current) {
+    items.push(extractMailbox(current.trim()));
+  }
+
+  return items;
 }
 
 export function extractMail(node: LetterparserNode): LetterparserMail {
