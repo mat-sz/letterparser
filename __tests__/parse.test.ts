@@ -519,4 +519,13 @@ describe('parseContentType', () => {
       parameters: { name: 'prüfbericht.pdf' },
     });
   });
+
+  // Issue #17: https://github.com/mat-sz/letterparser/issues/17
+  it('should handle empty space correctly', () => {
+    expect(parseContentType('text/plain; charset = "utf-8"')).toMatchObject({
+      type: 'text/plain',
+      encoding: 'utf-8',
+      parameters: { charset: 'utf-8' },
+    });
+  });
 });

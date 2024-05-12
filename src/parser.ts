@@ -35,7 +35,7 @@ export function parseHeaderValue(
         continue;
       }
 
-      let value = parameterSplit[1];
+      let value = parameterSplit[1].trim();
       if (parameterSplit.length > 2) {
         value = parameterSplit.slice(1).join('=');
       }
