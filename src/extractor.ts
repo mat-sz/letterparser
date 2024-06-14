@@ -24,6 +24,7 @@ export interface LetterparserMail {
   to?: LetterparserMailbox[];
   cc?: LetterparserMailbox[];
   bcc?: LetterparserMailbox[];
+  replyTo?: LetterparserMailbox[];
   date?: Date;
   from?: LetterparserMailbox;
   attachments?: LetterparserAttachment[];
@@ -157,6 +158,7 @@ export function extractMail(node: LetterparserNode): LetterparserMail {
   mail.to = extractMailboxes(node.headers['To']);
   mail.cc = extractMailboxes(node.headers['Cc']);
   mail.bcc = extractMailboxes(node.headers['Bcc']);
+  mail.replyTo = extractMailboxes(node.headers['Reply-To']);
   mail.from = node.headers['From']
     ? extractMailbox(node.headers['From'])
     : undefined;
