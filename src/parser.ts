@@ -3,17 +3,17 @@ import { toByteArray } from 'base64-js';
 
 import { unquote } from './helpers.js';
 
-type Headers = { [k: string]: string | undefined };
+export type LetterparserHeaders = { [k: string]: string | undefined };
 
 export interface LetterparserContentType {
   type: string;
   encoding?: string;
-  parameters: Headers;
+  parameters: LetterparserHeaders;
 }
 
 export interface LetterparserNode {
   contentType: LetterparserContentType;
-  headers: Headers;
+  headers: LetterparserHeaders;
   body: LetterparserNode | LetterparserNode[] | string | Uint8Array;
 }
 
@@ -21,7 +21,7 @@ const MAX_DEPTH = 99;
 
 export function parseHeaderValue(
   value: string
-): { firstValue: string; parameters: Headers } | undefined {
+): { firstValue: string; parameters: LetterparserHeaders } | undefined {
   const split = value.split(';').map(s => s.trim());
 
   const parameters: any = {};
@@ -78,12 +78,12 @@ export function parseContentType(
   };
 }
 
-function parseHeaders(
+export function parseHeadersFromLines(
   lines: string[],
   lineStartIdx: number,
   lineEndIdx: number
 ) {
-  const headers: Headers = {};
+  const headers: LetterparserHeaders = {};
   let headerName: string | undefined;
   let headerValue: string | undefined;
   let lineIdx = lineStartIdx;
@@ -167,7 +167,7 @@ export function parseBody(
 
   let contents: LetterparserNode;
 
-  let [headers, parsedType, lineIdx] = parseHeaders(
+  let [headers, parsedType, lineIdx] = parseHeadersFromLines(
     lines,
     lineStartIdx,
     lineEndIdx

@@ -4,6 +4,7 @@ import {
   LetterparserNode,
   LetterparserContentType,
   parseHeaderValue,
+  LetterparserHeaders,
 } from './parser.js';
 
 export interface LetterparserAttachment {
@@ -103,6 +104,24 @@ function extractBody(node: LetterparserNode) {
   return [text, html, amp, attachments] as const;
 }
 
+export function extractFromHeaders(headers: LetterparserHeaders) {
+  const mail: LetterparserMail = {};
+
+  mail.to = extractMailboxes(headers['To']);
+  mail.cc = extractMailboxes(headers['Cc']);
+  mail.bcc = extractMailboxes(headers['Bcc']);
+  mail.replyTo = extractMailboxes(headers['Reply-To']);
+  mail.from = headers['From'] ? extractMailbox(headers['From']) : undefined;
+
+  mail.subject = headers['Subject'];
+
+  if (typeof headers['Date'] === 'string') {
+    mail.date = new Date(headers['Date']);
+  }
+
+  return mail;
+}
+
 function extractMailbox(raw: string): LetterparserMailbox {
   const addressStart = raw.indexOf('<');
   const addressEnd = raw.lastIndexOf('>');
@@ -153,7 +172,7 @@ function extractMailboxes(raw?: string): LetterparserMailbox[] | undefined {
 }
 
 export function extractMail(node: LetterparserNode): LetterparserMail {
-  const mail: LetterparserMail = {};
+  const mail: LetterparserMail = extractFromHeaders(node.headers);
 
   mail.to = extractMailboxes(node.headers['To']);
   mail.cc = extractMailboxes(node.headers['Cc']);

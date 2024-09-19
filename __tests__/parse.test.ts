@@ -1,4 +1,4 @@
-import { parse } from '../src/index.js';
+import { parse, parseHeaders } from '../src/index.js';
 import { parseContentType } from '../src/parser.js';
 
 describe('parse', () => {
@@ -14,6 +14,23 @@ describe('parse', () => {
         To: 'a@example.com',
         'Content-Type': 'text/invalid',
       },
+    });
+  });
+
+  it('should parse headers', () => {
+    const output = parseHeaders(`Date: Wed, 01 Apr 2020 00:00:00 -0000
+From: A <a@example.com>
+To: B <b@example.com>
+Subject: Hello world!
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8`);
+
+    expect(output).toMatchObject({
+      Date: 'Wed, 01 Apr 2020 00:00:00 -0000',
+      From: 'A <a@example.com>',
+      To: 'B <b@example.com>',
+      Subject: 'Hello world!',
+      'Mime-Version': '1.0',
     });
   });
 

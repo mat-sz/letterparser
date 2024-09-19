@@ -1,4 +1,4 @@
-import { extract } from '../src/index.js';
+import { extract, extractHeaders } from '../src/index.js';
 
 describe('extract', () => {
   it('should extract information from a test message', () => {
@@ -13,6 +13,32 @@ Some message.`);
 
     expect(output).toMatchObject({
       text: 'Some message.',
+      from: {
+        name: 'A',
+        address: 'a@example.com',
+        raw: '"A" <a@example.com>',
+      },
+      to: [
+        {
+          name: 'B',
+          address: 'b@example.com',
+          raw: '"B" <b@example.com>',
+        },
+      ],
+      subject: 'Hello world!',
+      date: new Date('Wed, 01 Apr 2020 00:00:00 -0000'),
+    });
+  });
+
+  it('should extract information from headers', () => {
+    const output = extractHeaders(`Date: Wed, 01 Apr 2020 00:00:00 -0000
+From: A <a@example.com>
+To: B <b@example.com>
+Subject: Hello world!
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8`);
+
+    expect(output).toMatchObject({
       from: {
         name: 'A',
         address: 'a@example.com',
